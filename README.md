@@ -323,6 +323,160 @@ graph TD
 
 Contributions are welcome! If you have suggestions for improvements or want to add new features, feel free to open an issue or submit a pull request.
 
+
+
+# 🧠 NeuroOptima 优化器
+
+**NeuroOptima** 是一种前沿的混合优化器，旨在提升深度学习模型的训练效果。由 **NeuroGhost** 开发，该优化器结合了多种先进优化技术的优势，在收敛速度、稳定性和泛化能力方面表现卓越。
+
+---
+
+## 🚀 主要特性
+
+* **Sharpness-Aware Minimization (SAM)：** 通过考虑损失函数地形的锐度，在优化过程中提升模型的泛化能力。
+
+* **Lookahead 机制：** 通过周期性地同步快权重和慢权重，提高训练的稳定性和收敛可靠性。
+
+* **Lion 优化算法：** 基于符号的更新方式，内存效率高，适用于大规模模型的优化。
+
+* **Adan 动量机制：** 采用自适应的 Nesterov 动量，结合一阶和二阶梯度信息，加快收敛并提高稳定性。
+
+---
+
+## 📦 安装方法
+
+确保已安装 PyTorch，然后克隆项目仓库：
+
+```bash
+git clone https://github.com/NeuroGhost/NeuroOptima.git
+```
+
+进入项目目录并安装：
+
+```bash
+cd NeuroOptima
+pip install .
+```
+
+---
+
+## 🛠️ 使用方法
+
+将 **NeuroOptima** 集成到 PyTorch 训练循环中：
+
+```python
+from neurooptima import NeuroOptima
+
+model = YourModel()
+optimizer = NeuroOptima(
+    model.parameters(),
+    lr=1e-3,
+    weight_decay=0.01,
+    sam_rho=0.05,
+    lookahead_k=5,
+    lookahead_alpha=0.5,
+    betas=(0.9, 0.999),
+    eps=1e-8
+)
+
+for input, target in data_loader:
+    def closure():
+        optimizer.zero_grad()
+        output = model(input)
+        loss = loss_fn(output, target)
+        loss.backward()
+        return loss
+
+    loss = optimizer.step(closure)
+```
+
+---
+
+## 📊 性能对比图表
+
+### 1. 优化器收敛速度对比
+
+```mermaid
+graph LR
+    A[优化器对比] --> B[SGD：50轮]
+    A --> C[Adam：35轮]
+    A --> D[AdamW：30轮]
+    A --> E[NeuroOptima：20轮]
+```
+
+### 2. 最终验证准确率
+
+```mermaid
+graph TD
+    A[最终验证准确率]
+    A --> B[SGD：85%]
+    A --> C[Adam：88%]
+    A --> D[AdamW：89%]
+    A --> E[NeuroOptima：92%]
+```
+
+### 3. 训练稳定性对比（损失方差）
+
+```mermaid
+graph TD
+    A[训练稳定性]
+    A --> B[SGD：高波动]
+    A --> C[Adam：中等波动]
+    A --> D[AdamW：低波动]
+    A --> E[NeuroOptima：极低波动]
+```
+
+---
+
+## 📈 解读
+
+* **收敛速度：** NeuroOptima 以更少的训练轮数达到目标准确率，说明其具有更快的收敛能力。
+
+* **验证准确率：** 更高的最终准确率显示出更强的泛化能力。
+
+* **训练稳定性：** 损失波动更低，代表训练过程更加稳定可靠。
+
+---
+
+## 📈 基准测试
+
+在 CIFAR-10 和 ImageNet 等标准数据集上，**NeuroOptima** 展现出以下优势：
+
+* 收敛速度快于 Adam 和 SGD 等传统优化器。
+
+* 泛化能力更强，验证准确率更高。
+
+* 训练更稳定，减少了梯度爆炸或消失的风险。
+
+*注：详细基准测试结果与脚本可见 `benchmarks/` 目录。*
+
+---
+
+## 📚 参考文献
+
+**NeuroOptima** 灵感来源于以下研究工作：
+
+* Foret, P., 等. "Sharpness-Aware Minimization for Efficiently Improving Generalization." *ICLR 2021*.
+
+* Zhang, M., 等. "Lookahead Optimizer: k steps forward, 1 step back." *NeurIPS 2019*.
+
+* Chen, X., 等. "Symbolic Discovery of Optimization Algorithms." *arXiv:2302.06675*, 2023.
+
+* Xie, L., 等. "Adan: Adaptive Nesterov Momentum Algorithm for Faster Optimizing Deep Models." *arXiv:2208.06677*, 2022.
+
+---
+
+## 🤝 贡献
+
+欢迎贡献改进建议或新功能！如有想法请提交 issue 或 pull request。
+
+---
+
+## 📄 许可证
+
+本项目采用 MIT 许可证，详情请查看 [LICENSE](LICENSE) 文件。
+
+
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
